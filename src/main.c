@@ -120,7 +120,6 @@ int main(void)
     camera.rotation = 0.0f;
     camera.zoom = 1.0f; // <== adjust this for virtual scaling
 
-
     const int playerSize = 20;
     // Rectangle player = {.x = screenWidth/2-playerSize/2, .y=screenHeight/2-playerSize/2, .width=playerSize, .height=playerSize};
     Vector2 playerPos = {.x = screenWidth/2-playerSize/2, .y=screenHeight/2-playerSize/2};
@@ -169,6 +168,8 @@ int main(void)
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
+    bool fullscreenToggled = false;
+    
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -178,7 +179,15 @@ int main(void)
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
 
-        
+        if(fullscreenToggled) {
+            camera.zoom = (float)GetRenderWidth() / screenWidth;
+            fullscreenToggled = false;
+        }
+        if(IsKeyPressed(KEY_F)) {
+            ToggleFullscreen();
+            fullscreenToggled = true;
+        }
+
         if(IsKeyDown(KEY_LEFT)) playerRotation -= 360.0 * delta;
         if(IsKeyDown(KEY_RIGHT)) playerRotation += 360.0 * delta;
         
