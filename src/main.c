@@ -114,6 +114,12 @@ int main(void)
     //     exit(1);
     // }
 
+    Camera2D camera = { 0 };
+    camera.target = (Vector2){ 0, 0 };     // center of camera view
+    //camera.offset = (Vector2){ screenWidth / 2, screenHeight / 2 }; // align to center
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f; // <== adjust this for virtual scaling
+
 
     const int playerSize = 20;
     // Rectangle player = {.x = screenWidth/2-playerSize/2, .y=screenHeight/2-playerSize/2, .width=playerSize, .height=playerSize};
@@ -270,7 +276,7 @@ int main(void)
 
         // Draw
         //----------------------------------------------------------------------------------
-        BeginDrawing();
+        BeginMode2D(camera);
 
             ClearBackground(RAYWHITE);
 
