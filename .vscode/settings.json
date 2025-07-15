@@ -1,0 +1,20 @@
+{
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/*.o": true,
+		"**/*.exe": true,
+	},
+	"workbench.colorCustomizations": {
+		"activityBar.background": "#193323",
+		"titleBar.activeBackground": "#234732",
+		"titleBar.activeForeground": "#F7FBF9"
+	},
+	"files.associations": {
+		".fantomasignore": "ignore",
+		"iterator": "c"
+	}
+}
