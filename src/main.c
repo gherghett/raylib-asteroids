@@ -27,7 +27,7 @@ int main(void)
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        ProcessScreenChange();
+        ProcessScreenChange(); // Inits new Sceen and unloads
 
         // Update
         Update();
