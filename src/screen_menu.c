@@ -29,4 +29,3 @@ void ScreenMenu_Draw(void) {
 void ScreenMenu_Unload(void) {
     hello = 0;
 }
-

@@ -1,4 +1,5 @@
 # Raylib Asteroids
+![preview](screenshot.gif)
 
 Hobbyprojekt för att testa C och raylib, kul att skriva något helt procedurelt utan klasser o grejer.
 
