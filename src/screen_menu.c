@@ -2,11 +2,14 @@
 #include "screen_manager.h"
 int hello = 0;
 static char *title = "ASTEROIDS";
-static char *instructions = "Press ENTER to start \n arrow-keys + space to shoot";
+static char *instructions = "Press ENTER to start \narrow-keys + space to shoot \n\n'F' for fullscreen";
 void ScreenMenu_Init(void) {
     hello++;
 }
 void ScreenMenu_Update(void) {
+    if(IsKeyPressed(KEY_F)) {
+        ToggleFullscreen();
+    }
     if(IsKeyPressed(KEY_ENTER)) {
         ChangeToScreen(SCREEN_GAMEPLAY);
     }
