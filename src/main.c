@@ -1,13 +1,17 @@
 #include "raylib.h"
 #include <malloc.h>
 #include <math.h>
-#include "screen_gameplay.h"
+// #include "screen_gameplay.h"
+// #include "screen_menu.h"
+#include "screen_manager.h"
+
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
 int main(void)
 {
+
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = 800;
@@ -17,25 +21,22 @@ int main(void)
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
-
-    ScreenGameplay_Init();
+    
+    ChangeToScreen(SCREEN_MENU);
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        ProcessScreenChange();
+
         // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-        ScreenGameplay_Update();
+        Update();
 
         // Draw
-        //----------------------------------------------------------------------------------
-        ScreenGameplay_Draw();
-        //----------------------------------------------------------------------------------
+        Draw();
     }
 
-    ScreenGameplay_Unload();
+    Unload();
 
     // De-Initialization
     //--------------------------------------------------------------------------------------

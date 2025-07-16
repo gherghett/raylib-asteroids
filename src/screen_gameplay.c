@@ -3,6 +3,8 @@
 #include <math.h>
 // #include "screen_gameplay.h"
 
+#include "screen_manager.h"
+
 #define STARTING_ASTEROIDS 10
 #define ASTEROID_START_SIZE 40
 #define ASTEROID_MIN_SIZE 10
@@ -87,39 +89,64 @@ Vector2 GetVectorForAsteroidPoint(Vector2 *point, Vector2 *relativePos, float an
 
 static const int screenWidth = 800;
 static const int screenHeight = 450;
-static Camera2D camera = { 0 };
+static Camera2D camera;
 
 static const int playerSize = 20;
-static Vector2 playerPos = {.x = screenWidth/2-playerSize/2, .y=screenHeight/2-playerSize/2};
-static Vector2 playerOrigin = {playerSize/2, .y=playerSize/2};
-static float playerRotation = 0.0;
+static Vector2 playerPos;
+static Vector2 playerOrigin;
+static float playerRotation;
 static const int playerAcceleration = 20.0f;
-static Vector2 playerSpeed = {0};
+static Vector2 playerSpeed;
 
-static Vector2 playerTriangle[3] = {
-    {-10, -10},
-    {-10, 10},
-    {10, 0},
-};
+static Vector2 playerTriangle[3];
 
-static Bullet bullets[100] = {};
-static int bulletsLoc = 0;
+static Bullet bullets[100];
+static int bulletsLoc;
 
-static Asteroid asteroids[MAX_ASTEROIDS] = {0}; 
-static int asteroidLoc = 0;  
+static Asteroid asteroids[MAX_ASTEROIDS]; 
+static int asteroidLoc;  
 static Vector2 *asteroidPointsArea;
 static Vector2 *asteroidPointsLoc;
 
-static int fullscreenToggled_CurrentResultion = 0;
+static int fullscreenToggled_CurrentResultion;
 
 Vector2 playerTrianglePos[3];
 
 void ScreenGameplay_Init(void)
 {
+    // Initialize camera
     camera.target = (Vector2){ 0, 0 };     // center of camera view
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
+    camera.offset = (Vector2){ 0, 0 };
 
+    // Initialize player
+    playerPos = (Vector2){.x = screenWidth/2-playerSize/2, .y=screenHeight/2-playerSize/2};
+    playerOrigin = (Vector2){playerSize/2, .y=playerSize/2};
+    playerRotation = 0.0;
+    playerSpeed = (Vector2){0};
+
+    // Initialize player triangle shape
+    playerTriangle[0] = (Vector2){-10, -10};
+    playerTriangle[1] = (Vector2){-10, 10};
+    playerTriangle[2] = (Vector2){10, 0};
+
+    // Initialize bullets
+    for(int i = 0; i < 100; i++) {
+        bullets[i].active = false;
+    }
+    bulletsLoc = 0;
+
+    // Initialize asteroids
+    for(int i = 0; i < MAX_ASTEROIDS; i++) {
+        asteroids[i].active = false;
+    }
+    asteroidLoc = 0;
+    
+    // Initialize fullscreen toggle
+    fullscreenToggled_CurrentResultion = 0;
+
+    // Initialize asteroid memory allocation
     asteroidPointsArea = malloc(sizeof(Vector2) * POINTS_ARRAY_SIZE);
     asteroidPointsLoc = asteroidPointsArea;
 
@@ -145,6 +172,11 @@ void ScreenGameplay_Init(void)
 
 void ScreenGameplay_Update() {
     float delta = GetFrameTime();
+
+    if(IsKeyPressed(KEY_M)) {
+        ChangeToScreen(SCREEN_MENU);
+    }
+
     if(fullscreenToggled_CurrentResultion != GetRenderWidth()) {
         camera.zoom = (float)GetRenderWidth() / screenWidth;
         fullscreenToggled_CurrentResultion = GetRenderWidth();

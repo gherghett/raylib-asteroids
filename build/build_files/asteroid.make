@@ -186,8 +186,12 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/screen_gameplay.o
+GENERATED += $(OBJDIR)/screen_manager.o
+GENERATED += $(OBJDIR)/screen_menu.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/screen_gameplay.o
+OBJECTS += $(OBJDIR)/screen_manager.o
+OBJECTS += $(OBJDIR)/screen_menu.o
 
 # Rules
 # #############################################
@@ -255,6 +259,12 @@ $(OBJDIR)/main.o: ../../src/main.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/screen_gameplay.o: ../../src/screen_gameplay.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/screen_manager.o: ../../src/screen_manager.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/screen_menu.o: ../../src/screen_menu.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
