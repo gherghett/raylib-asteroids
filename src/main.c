@@ -8,20 +8,6 @@
 #define MAX_ASTEROIDS 150
 #define POINTS_ARRAY_SIZE 1600
 
-// int count_total_asteroids(int size) {
-//     if (size <= ASTEROID_MIN_SIZE) return 0;
-//     int children = 2;
-//     int child_size = size / 2;
-//     return children + children * count_total_asteroids(child_size);
-// }
-
-// int sum_total_sizes(int size) {
-//     if (size < ASTEROID_MIN_SIZE) return 0;
-//     int children = 2;
-//     int child_size = size / 2;
-//     return children * child_size + sum_total_sizes(child_size) * children;
-// }
-
 typedef struct {
     Vector2 *points;
     int size; // size of point array
@@ -168,7 +154,7 @@ int main(void)
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
-    bool fullscreenToggled = false;
+    int fullscreenToggled_CurrentResultion = 0;
     
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -179,13 +165,13 @@ int main(void)
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
 
-        if(fullscreenToggled) {
+        if(fullscreenToggled_CurrentResultion != GetRenderWidth()) {
             camera.zoom = (float)GetRenderWidth() / screenWidth;
-            fullscreenToggled = false;
+            fullscreenToggled_CurrentResultion = GetRenderWidth();
         }
         if(IsKeyPressed(KEY_F)) {
+            fullscreenToggled_CurrentResultion = GetRenderWidth();
             ToggleFullscreen();
-            fullscreenToggled = true;
         }
 
         if(IsKeyDown(KEY_LEFT)) playerRotation -= 360.0 * delta;
@@ -306,10 +292,11 @@ int main(void)
                 if(!asteroids[a].active) continue;
                 int pointCount = asteroids[a].size;
                 for (int i = 0; i < pointCount - 1; i++) {
-                    DrawLineEx(
-                        GetVectorForAsteroidPoint(&asteroids[a].points[i], &asteroids[a].position, asteroids[a].rotation ),
-                        GetVectorForAsteroidPoint(&asteroids[a].points[i + 1], &asteroids[a].position, asteroids[a].rotation ),
-                        3.0, RED);
+                    Vector2 from = GetVectorForAsteroidPoint(&asteroids[a].points[i], &asteroids[a].position, asteroids[a].rotation );
+                    Vector2 to = GetVectorForAsteroidPoint(&asteroids[a].points[i + 1], &asteroids[a].position, asteroids[a].rotation );
+
+                    DrawCircleV(from, 1.5, RED ); // this connects the lines i pretty way 
+                    DrawLineEx(from, to, 3.0, RED);
                 }
             }
 
