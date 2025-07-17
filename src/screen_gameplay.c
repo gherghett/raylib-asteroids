@@ -87,6 +87,11 @@ Vector2 GetVectorForAsteroidPoint(Vector2 *point, Vector2 *relativePos, float an
     };
 }
 
+static Sound shoot;
+#define BOOM_SOUND_MAX 10
+static Sound boom[BOOM_SOUND_MAX];
+int boomCurrent;
+
 static const int screenWidth = 800;
 static const int screenHeight = 450;
 static Camera2D camera;
@@ -114,6 +119,14 @@ Vector2 playerTrianglePos[3];
 
 void ScreenGameplay_Init(void)
 {
+    shoot = LoadSound("resources/shoot.wav");
+    boom[0] =  LoadSound("resources/boom.wav");
+    for(int i = 1; i < BOOM_SOUND_MAX; i++) {
+        boom[i] = LoadSoundAlias(boom[0]);
+    }
+    boomCurrent = 0;
+
+
     // Initialize camera
     camera.target = (Vector2){ 0, 0 };     // center of camera view
     camera.rotation = 0.0f;
@@ -208,6 +221,8 @@ void ScreenGameplay_Update() {
     playerPos.y += playerSpeed.y * delta;
 
     if(IsKeyPressed(KEY_SPACE)) {
+        SetSoundPitch(shoot, (float)GetRandomValue(90, 120)/100);
+        PlaySound(shoot);
         Bullet newBullet = {
             .position = playerPos,
             .direction = AddVectors(RotatePoint((Vector2){500, 0}, NULL, playerRotRad), playerSpeed),
@@ -223,6 +238,7 @@ void ScreenGameplay_Update() {
     if(playerPos.y < -20.0 ) playerPos.y = screenHeight;
     if(playerPos.y > screenHeight + 20) playerPos.y = -20;
 
+    // MOVE ASTEROIDS
     for(int a = 0; a < asteroidLoc; a++) {
         if(!asteroids[a].active) continue;
         asteroids[a].position.x += asteroids[a].speed.x * delta;
@@ -234,10 +250,12 @@ void ScreenGameplay_Update() {
         if(asteroids[a].position.y > screenHeight + 40) asteroids[a].position.y = -40;
     }
 
+    // POSITON PLAYER
     playerTrianglePos[0] = AddVectors(RotatePoint(playerTriangle[0], NULL, playerRotRad), playerPos);
     playerTrianglePos[1] =  AddVectors(RotatePoint(playerTriangle[1], NULL, playerRotRad), playerPos);
     playerTrianglePos[2] = AddVectors(RotatePoint(playerTriangle[2], NULL, playerRotRad), playerPos);
 
+    // BULLETS
     for(int i = 0; i < 100; i++){
         if(!bullets[i].active) continue;
         bullets[i].position.x += bullets[i].direction.x * delta;
@@ -250,8 +268,11 @@ void ScreenGameplay_Update() {
             float xDistance = fabsf(bullets[i].position.x - asteroids[a].position.x);
             float yDistance = fabsf(bullets[i].position.y - asteroids[a].position.y);
             if(xDistance < asteroids[a].size && yDistance < asteroids[a].size) {
+                // bullet hit asteroid
                 bullets[i].active = false;
                 asteroids[a].active = false;
+                PlaySound(boom[boomCurrent]);
+                boomCurrent = (boomCurrent + 1) % BOOM_SOUND_MAX;
                 if(asteroids[a].size <= 10) continue;
                 for( int j = 0; j < 2; j++) {
                     int speedX = GetRandomValue(-60, 60);
@@ -316,12 +337,15 @@ void ScreenGameplay_Draw(void) {
             DrawCircle(bullets[i].position.x, bullets[i].position.y, 5.0f, BLUE);
         }
 
-        // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
     EndDrawing();
     //----------------------------------------------------------------------------------
 }
 
 void ScreenGameplay_Unload(void) {
     free(asteroidPointsArea);
+    UnloadSound(shoot);
+    for(int i = 1; i < BOOM_SOUND_MAX; i++) {
+        UnloadSoundAlias(boom[i]);
+    }
+    UnloadSound(boom[0]);
 }

@@ -17,6 +17,8 @@ int main(void)
     const int screenWidth = 800;
     const int screenHeight = 450;
 
+    InitAudioDevice();      // Initialize audio device
+
     InitWindow(screenWidth, screenHeight, "raylib ASTEROIDS");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -41,6 +43,8 @@ int main(void)
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
+    CloseAudioDevice();     // Close audio device
+    //UnloadSound(soundArray[0]); 
     //--------------------------------------------------------------------------------------
 
     return 0;
